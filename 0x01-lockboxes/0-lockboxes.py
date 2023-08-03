@@ -1,27 +1,25 @@
 #!/usr/bin/python3
-'''A module for working with lockboxes.
-'''
-
-
-from collections import deque
+"""Lockboxes Contains method that finds the keys to
+open other lockboxes
+"""
 
 
 def canUnlockAll(boxes):
-    n = len(boxes)
-    if n == 0:
-        return False
+    """
+       Function that determines if you can open all the lockboxes
+       Args:
+           boxes: list of lists of integers
+       Returns:
+           True if you can open all the lockboxes, False otherwise
+       """
+    num_boxes = len(boxes)
+    unlocked = set()
+    unlocked.add(0)  # Start with the first box
+    keys = boxes[0]  # Start with the keys from the first box
+    while keys:
+        key = keys.pop()
+        if key < num_boxes and key not in unlocked:
+            unlocked.add(key)
+            keys.extend(boxes[key])
 
-    # Set to store the keys we have collected
-    keys = set([0])
-
-    # Queue to store the boxes we can currently open
-    queue = deque([0])
-
-    while queue:
-        box = queue.popleft()
-        for key in boxes[box]:
-            if key not in keys and key < n:
-                keys.add(key)
-                queue.append(key)
-
-    return len(keys) == n
+    return len(unlocked) == num_boxes
